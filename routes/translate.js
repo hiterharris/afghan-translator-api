@@ -5,7 +5,7 @@ const { configuration, openai } = config;
 router.post("/", async (req, res) => {
     const text = req.body.text || '';
     const inputLanguage = req.body.language || 'English';
-
+    
     const messagesEnglish = [
         { role: "system", content: 'You will be provided with a sentence in English, and your task is to translate it to Afghan Dari using only the Latin alphabet.' },
         { role: "user", content: text },
@@ -23,26 +23,16 @@ router.post("/", async (req, res) => {
         return;
     }
 
-    const params = {
-        model: "gpt-4",
-        messages: inputLanguage === 'English' ? messagesEnglish : messagesDari,
-        temperature: 0,
-        max_tokens: 256,
-    };
-
     try {
-        const response = await openai.createChatCompletion(params, {
-            method: 'post',
-            url: 'https://api.openai.com/v1/engines/content-filter-alpha-c4/completions',
-            headers: {
-                'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`,
-                'Content-Type': 'application/json',
-                'Access-Control-Allow-Origin': 'no-cors'
-            },
+        const response = await openai.createChatCompletion({
+            model: "gpt-4",
+            messages: inputLanguage === 'English' ? messagesEnglish : messagesDari,
+            temperature: 0,
+            max_tokens: 256,
         });
         const result = response?.data?.choices[0]?.message?.content;
         res.status(200).json(result);
-    } catch (error) {
+    } catch(error) {
         if (error.response) {
             console.error(error.response.status, error.response.data);
             res.status(error.response.status).json(error.response.data);

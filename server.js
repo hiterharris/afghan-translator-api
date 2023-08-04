@@ -4,10 +4,7 @@ const cors = require("cors");
 const bodyParser = require("body-parser");
 const server = express();
 
-// const BedtimeRouter = require("./routes/bedtime-story.js");
-// const DariRouter = require("./routes/translate/dari.js");
 const TranslateRouter = require("./routes/translate.js");
-// const RecipesRouter = require("./routes/recipes.js");
 
 server.use(cors());
 server.use(helmet());
@@ -18,9 +15,14 @@ server.get("/", (req, res) => {
   res.send("Dari Translator API");
 });
 
-// server.use("/api/bedtime-story", BedtimeRouter);
-// server.use("/api/translate/dari", DariRouter);
+server.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", '*');
+  res.header("Access-Control-Allow-Credentials", true);
+  res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+  res.header("Access-Control-Allow-Headers", 'Origin,X-Requested-With,Content-Type,Accept,content-type,application/json');
+  next();
+});
+
 server.use("/api/translate", TranslateRouter);
-// server.use("/api/recipes", RecipesRouter);
 
 module.exports = server;
