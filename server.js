@@ -1,5 +1,6 @@
 const express = require("express");
 const helmet = require("helmet");
+const cors = require("cors");
 const bodyParser = require("body-parser");
 const server = express();
 
@@ -8,6 +9,7 @@ const server = express();
 const TranslateRouter = require("./routes/translate.js");
 // const RecipesRouter = require("./routes/recipes.js");
 
+server.use(cors());
 server.use(helmet());
 server.use(express.json());
 server.use(bodyParser.json());
