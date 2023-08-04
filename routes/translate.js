@@ -30,17 +30,6 @@ router.post("/", async (req, res) => {
         max_tokens: 256,
     };
 
-    const config = {
-        method: 'post',
-        url: 'https://api.openai.com/v1/engines/content-filter-alpha-c4/completions',
-        headers: {
-            'Content-Type': 'application/json',
-            'Access-Control-Allow-Origin': 'no-cors'
-        },
-
-        data: params
-    };
-
     try {
         const response = await openai.createChatCompletion(params, {
             method: 'post',
