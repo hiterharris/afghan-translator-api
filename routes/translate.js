@@ -21,7 +21,7 @@ router.post("/", async (req, res) => {
 
     const messagesDari = [
         { role: "system", content: 'You will be provided with a sentence in Dari, and your task is to translate it to English using only the Latin alphabet.' },
-        { role: "user", content: { text } },
+        { role: "user", content: text },
     ];
 
     if (!configuration.apiKey) {
