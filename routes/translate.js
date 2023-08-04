@@ -2,10 +2,18 @@ const router = require("express").Router();
 const config = require("../config");
 const { configuration, openai } = config;
 
+router.use(function (req, res, next) {
+    res.header("Access-Control-Allow-Origin", '*');
+    res.header("Access-Control-Allow-Credentials", true);
+    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+    res.header("Access-Control-Allow-Headers", 'Origin,X-Requested-With,Content-Type,Accept,content-type,application/json');
+    next();
+});
+
 router.post("/", async (req, res) => {
     const text = req.body.text || '';
     const inputLanguage = req.body.language || 'English';
-    
+
     const messagesEnglish = [
         { role: "system", content: 'You will be provided with a sentence in English, and your task is to translate it to Afghan Dari using only the Latin alphabet.' },
         { role: "user", content: text },
@@ -32,7 +40,7 @@ router.post("/", async (req, res) => {
         });
         const result = response?.data?.choices[0]?.message?.content;
         res.status(200).json(result);
-    } catch(error) {
+    } catch (error) {
         if (error.response) {
             console.error(error.response.status, error.response.data);
             res.status(error.response.status).json(error.response.data);
