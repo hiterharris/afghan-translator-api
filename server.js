@@ -6,6 +6,7 @@ const server = express();
 
 const TranslateRouter = require("./routes/translate.js");
 const SupportRouter = require("./routes/support.js");
+const ImageRouter = require("./routes/image.js");
 
 server.use(cors());
 server.use(helmet());
@@ -18,5 +19,6 @@ server.get("/", (req, res) => {
 
 server.use("/api/translate", TranslateRouter);
 server.use("/api/support", SupportRouter);
+server.use("/api/image", ImageRouter);
 
 module.exports = server;
