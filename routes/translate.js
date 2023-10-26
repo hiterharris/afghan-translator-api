@@ -15,7 +15,7 @@ router.post("/", async (req, res) => {
     const inputLanguage = req.body.language || 'English';
 
     const messagesEnglish = [
-        { role: "system", content: 'You will be provided with a sentence in English, and your task is to translate it to Afghan Dari using only the Latin alphabet.' },
+        { role: "system", content: 'You will be provided with a sentence in English, and your task is to translate it to Afghan Dari providing both the Latin alphabet translation and the Arabic alphabet translation separated by a "%%"' },
         { role: "user", content: text },
     ];
 
