@@ -44,7 +44,7 @@ router.post("/", async (req, res) => {
     }
 
     try {
-        const response = await openai.createChatCompletion({
+        const response = await openai.chat.completions.create({
             model: "gpt-4",
             messages: inputLanguage === 'English' ? messagesEnglish : messagesDari,
             temperature: 0,
