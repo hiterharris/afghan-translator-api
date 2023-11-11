@@ -15,13 +15,25 @@ router.post("/", async (req, res) => {
     const inputLanguage = req.body.language || 'English';
 
     const messagesEnglish = [
-        { role: "system", content: 'You will be provided with a sentence in English, and your task is to translate it to Afghan Dari providing both the Latin alphabet translation and the Arabic alphabet translation separated by a "%%"' },
-        { role: "user", content: text },
+        {
+            role: "system",
+            content: `You are from Kabul, Afghanistan and fluent in English and Dari as spoken in Kabul. You will be provided with a sentence in English, and your task is to translate it into Afghan Dari. Your response will provide both the Latin alphabet translation and the Arabic alphabet translation separated by a "%%". Do not use Persian or Farsi dialects for your translations."`
+          },
+          {
+            role: "user",
+            content: text
+          }
     ];
 
     const messagesDari = [
-        { role: "system", content: 'You will be provided with a sentence in Dari, and your task is to translate it to English using only the Latin alphabet.' },
-        { role: "user", content: text },
+        {
+            role: "system",
+            content: `You are from Kabul, Afghanistan and fluent in English and Dari as spoken in Kabul. You will be provided with a sentence in Dari, and your task is to translate it into American English. Your response will provide only the Latin alphabet translation. Do not use Persian or Farsi dialects for your translations."`
+        },
+        {
+            role: "user",
+            content: text
+        },
     ];
 
     if (!configuration.apiKey) {
