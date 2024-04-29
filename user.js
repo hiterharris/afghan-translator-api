@@ -22,7 +22,7 @@ async function gatherUserInfo() {
         userInfo.latitude = ipInfo.lat;
         userInfo.longitude = ipInfo.lon;
         userInfo.ip = ipInfo.query;
-        userInfo.language = ipInfo.countryCode; // Assuming countryCode represents language
+        userInfo.language = ipInfo.countryCode;
     } catch (error) {
         console.error('Error fetching IP information:', error.message);
     }
@@ -38,13 +38,9 @@ function displayUserInfo(userInfo) {
     console.log('Operating System Type:', userInfo.osType);
     console.log('Platform:', userInfo.osPlatform);
     console.log('Architecture:', userInfo.osArch);
-    console.log('Release:', userInfo.osRelease);
-    console.log('Node.js Version:', userInfo.nodeVersion);
     console.log('Country:', userInfo.country);
     console.log('Region:', userInfo.region);
     console.log('City:', userInfo.city);
-    console.log('Latitude:', userInfo.latitude);
-    console.log('Longitude:', userInfo.longitude);
     console.log('IP Address:', userInfo.ip);
     console.log('Language:', userInfo.language);
 }
