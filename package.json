@@ -6,7 +6,6 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nodemon index.js",
-    "pm2": "pm2 start index.js",
     "restart": "nodemon -x 'node index.js || touch index.js'"
   },
   "author": "",
@@ -25,7 +24,6 @@
     "nodemailer": "^6.9.4",
     "nodemon": "^2.0.22",
     "openai": "^3.3.0",
-    "openapi": "^1.0.1",
-    "pm2": "^5.3.1"
+    "openapi": "^1.0.1"
   }
 }
