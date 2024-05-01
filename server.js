@@ -2,8 +2,8 @@ const express = require("express");
 const helmet = require("helmet");
 const cors = require("cors");
 const bodyParser = require("body-parser");
-const server = express();
 const statusMonitor = require('express-status-monitor')();
+const server = express();
 
 const TranslateRouter = require("./routes/translate.js");
 const SupportRouter = require("./routes/support.js");
