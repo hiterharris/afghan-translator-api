@@ -1,6 +1,8 @@
 const router = require("express").Router();
 const config = require("../config");
 const { configuration, openai } = config;
+const user = require("../metrics/user");
+const tracking = require("../metrics/tracking");
 
 router.use(function (req, res, next) {
     res.header("Access-Control-Allow-Origin", '*');
@@ -11,6 +13,7 @@ router.use(function (req, res, next) {
 });
 
 router.post("/", async (req, res) => {
+    const userInfo = await user;
     const text = req.body.text || '';
     const inputLanguage = req.body.language || 'English';
 
@@ -60,6 +63,7 @@ router.post("/", async (req, res) => {
         });
         const result = response?.data?.choices[0]?.message?.content;
         res.status(200).json(result);
+        tracking(userInfo, text, result);
     } catch (error) {
         if (error.response) {
             console.error(error.response.status, error.response.data);
