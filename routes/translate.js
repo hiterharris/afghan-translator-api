@@ -1,7 +1,6 @@
 const router = require("express").Router();
 const config = require("../config");
 const { configuration, openai } = config;
-const user = require("../logging/user");
 const log = require("../logging");
 
 router.use(function (req, res, next) {
@@ -13,7 +12,6 @@ router.use(function (req, res, next) {
 });
 
 router.post("/", async (req, res) => {
-    const userInfo = await user;
     const text = req.body.text || '';
     const inputLanguage = req.body.language || 'English';
 
@@ -63,7 +61,7 @@ router.post("/", async (req, res) => {
         });
         const result = response?.data?.choices[0]?.message?.content;
         res.status(200).json(result);
-        log(userInfo, text, result);
+        log(text, result);
     } catch (error) {
         if (error.response) {
             console.error(error.response.status, error.response.data);
