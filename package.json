@@ -24,6 +24,8 @@
     "nodemailer": "^6.9.4",
     "nodemon": "^2.0.22",
     "openai": "^3.3.0",
-    "openapi": "^1.0.1"
+    "openapi": "^1.0.1",
+    "pino": "^9.0.0",
+    "pino-pretty": "^11.0.0"
   }
 }
