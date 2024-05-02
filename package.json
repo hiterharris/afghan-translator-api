@@ -27,6 +27,7 @@
     "openai": "^3.3.0",
     "openapi": "^1.0.1",
     "pino": "^9.0.0",
-    "pino-pretty": "^11.0.0"
+    "pino-pretty": "^11.0.0",
+    "winston": "^3.13.0"
   }
 }

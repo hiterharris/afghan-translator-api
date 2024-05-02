@@ -1,4 +1,5 @@
 const pino = require('pino');
+const winston = require('winston');
 
 const logger = pino({
     transport: {
@@ -10,4 +11,13 @@ const logger = pino({
     }
 })
 
-module.exports = logger;
+
+const wLogger = winston.createLogger({
+  format: winston.format.json(),
+  transports: [
+    new winston.transports.File({ filename: 'log.json' }),
+    new winston.transports.Console()
+  ]
+});
+
+module.exports = { logger, wLogger };
