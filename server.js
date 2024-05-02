@@ -19,10 +19,7 @@ const moesifMiddleware = moesif({
   applicationId: process.env.MOESIF_APPLICATION_ID,
   identifyUser: function (req, res) {
     return req.user ? req.user.id : undefined;
-  },
-  // getMetadata: function (req, res) {
-  //   return req.body;
-  // },
+  }
 });
 
 server.use(moesifMiddleware);
