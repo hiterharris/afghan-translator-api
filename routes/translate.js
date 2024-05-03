@@ -2,6 +2,8 @@ const router = require("express").Router();
 const config = require("../config");
 const { configuration, openai } = config;
 const logger = require("../logger");
+const db = require('../data/db-config');
+const { request } = require("https");
 
 router.use(function (req, res, next) {
     res.header("Access-Control-Allow-Origin", '*');
@@ -60,6 +62,12 @@ router.post("/", async (req, res) => {
             max_tokens: 256,
         });
         const result = response?.data?.choices[0]?.message?.content;
+        db.insert({
+            request_language: inputLanguage, 
+            request_text: text,
+            response_latin: JSON.parse(result)?.latin,
+            response_arabic: JSON.parse(result)?.arabic
+        });
         logger.info({
             request: text,
             response: JSON.parse(result)
@@ -78,6 +86,16 @@ router.post("/", async (req, res) => {
             });
         }
     }
+});
+
+router.get("/logs", async (req, res) => {
+    const logs = await db.find();
+    res.status(200).json(logs);
+});
+
+router.delete("/logs/:id", async (req, res) => {
+    const log = await db.remove(req.params.id);
+    res.status(200).json(log);
 });
 
 module.exports = router;
