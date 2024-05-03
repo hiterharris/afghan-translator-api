@@ -1,7 +1,9 @@
 const router = require("express").Router();
 const config = require("../config");
 const { configuration, openai } = config;
-const logger = require("../logging");
+const logger = require("../logger");
+const db = require('../data/db-config');
+const prompts = require('../constants');
 
 router.use(function (req, res, next) {
     res.header("Access-Control-Allow-Origin", '*');
@@ -12,38 +14,8 @@ router.use(function (req, res, next) {
 });
 
 router.post("/", async (req, res) => {
-    const text = req.body.text || '';
+    const { messagesEnglish, messagesDari } = prompts(req, res);
     const inputLanguage = req.body.language || 'English';
-
-    const messagesEnglish = [
-        {
-            role: "system",
-            content: `You are from Kabul, Afghanistan and fluent in English and Dari as spoken in Kabul. You will be provided with a sentence in English, and your task is to translate it into Afghan Dari.  Your response will follow the list of guidelines below:
-            1. Your response will be in the format of an json object in this format: { latin: "Latin alphabet translation", arabic: "Arabic alphabet translation" }.
-            2. Do not use Persian or Farsi dialects for your translations.
-            3. Do not use any other language than Dari.
-            4. Use "ma" instead of "man" for "I".
-            5. Use "wa" instead of "va" as the translation for the word "and".
-            `
-          },
-          {
-            role: "user",
-            content: text
-          }
-    ];
-
-    const messagesDari = [
-        {
-            role: "system",
-            content: `You are from Kabul, Afghanistan and fluent in English and Dari as spoken in Kabul. You will be provided with a sentence in Dari, and your task is to translate it into American English. Your response will provide only the Latin alphabet translation. Do not use Persian or Farsi dialects for your translations. Your response will follow the list of guidelines below:
-            1. Your response will be in the format of an json object in this format: { latin: "Latin alphabet translation" }.
-            `
-        },
-        {
-            role: "user",
-            content: text
-        },
-    ];
 
     if (!configuration.apiKey) {
         res.status(500).json({
@@ -60,17 +32,23 @@ router.post("/", async (req, res) => {
             max_tokens: 256,
         });
         const result = response?.data?.choices[0]?.message?.content;
+        db.insert({
+            request_language: inputLanguage, 
+            request_text: req.body.text,
+            response_latin: JSON.parse(result)?.latin,
+            response_arabic: JSON.parse(result)?.arabic
+        });
         logger.info({
-            request: text,
+            request: req.body.text,
             response: JSON.parse(result)
         });
         res.status(200).json(result);
     } catch (error) {
         if (error.response) {
-            console.error(error.response.status, error.response.data);
+            logger.error(error.response.status, error.response.data);
             res.status(error.response.status).json(error.response.data);
         } else {
-            console.error(`Error with OpenAI API request: ${error.message}`);
+            logger.error(`Error with OpenAI API request: ${error.message}`);
             res.status(500).json({
                 error: {
                     message: 'An error occurred during your request.',
