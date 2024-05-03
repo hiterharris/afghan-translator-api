@@ -1,6 +1,7 @@
 require('dotenv').config();
 const router = require("express").Router();
 const nodemailer = require("nodemailer");
+const logger = require("../logger");
 
 router.use(function (req, res, next) {
     res.header("Access-Control-Allow-Origin", '*');
@@ -30,9 +31,9 @@ router.post("/", (req, res) => {
     
     transporter.verify((error) => {
         if (error) {
-            console.log(error);
+            logger.error(error);
         } else {
-            console.log("Ready to Send");
+            logger.info("Ready to Send");
         }
     });
 

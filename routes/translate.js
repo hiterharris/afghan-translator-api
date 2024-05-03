@@ -1,7 +1,7 @@
 const router = require("express").Router();
 const config = require("../config");
 const { configuration, openai } = config;
-const logger = require("../logging");
+const logger = require("../logger");
 
 router.use(function (req, res, next) {
     res.header("Access-Control-Allow-Origin", '*');
@@ -67,10 +67,10 @@ router.post("/", async (req, res) => {
         res.status(200).json(result);
     } catch (error) {
         if (error.response) {
-            console.error(error.response.status, error.response.data);
+            logger.error(error.response.status, error.response.data);
             res.status(error.response.status).json(error.response.data);
         } else {
-            console.error(`Error with OpenAI API request: ${error.message}`);
+            logger.error(`Error with OpenAI API request: ${error.message}`);
             res.status(500).json({
                 error: {
                     message: 'An error occurred during your request.',
