@@ -8,6 +8,7 @@ const moesif = require('moesif-nodejs');
 
 const TranslateRouter = require("./routes/translate.js");
 const SupportRouter = require("./routes/support.js");
+const LogRouter = require("./routes/logs.js");
 
 server.use(require('express-status-monitor')({ title: 'Afghan Translator API' }));
 server.use(cors());
@@ -32,5 +33,6 @@ server.get("/", (req, res) => {
 
 server.use("/api/translate", TranslateRouter);
 server.use("/api/support", SupportRouter);
+server.use("/api/logs", LogRouter);
 
 module.exports = server;
