@@ -71,11 +71,14 @@ router.post("/", async (req, res) => {
             res.status(error.response.status).json(error.response.data);
         } else {
             console.error(`Error with OpenAI API request: ${error.message}`);
-            res.status(500).json({
+            const errorMessage = {
                 error: {
                     message: 'An error occurred during your request.',
                 }
-            });
+            }
+            const inputError = "{ \"latin\": \"Lotfan matn bereh\", \"arabic\": \"لطفاً متن بریږ\" }";
+            JSON.parse(inputError);
+            res.status(500).json(text?.length == 0 ? inputError : errorMessage);
         }
     }
 });
