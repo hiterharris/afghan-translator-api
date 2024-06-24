@@ -13,7 +13,22 @@ router.use(function (req, res, next) {
     next();
 });
 
-router.post("/", async (req, res) => {
+// Middleware to check if the request body is empty
+function checkRequestBody(req, res, next) {
+    const { text } = req.body;
+    if (!text || text.trim() === '') {
+        return res.status(400).json({
+            error: {
+                message: 'Please enter the text to translate.',
+            },
+            
+        });
+    }
+    next();
+}
+
+
+router.post("/", checkRequestBody, async (req, res) => {
     const { messagesEnglish, messagesDari } = prompts(req, res);
     const inputLanguage = req.body.language || 'English';
 
