@@ -4,6 +4,7 @@ const { configuration, openai } = config;
 const logger = require("../logger");
 const db = require('../data/db-config');
 const prompts = require('../constants');
+const { checkRequestBody } = require('../middleware');
 
 router.use(function (req, res, next) {
     res.header("Access-Control-Allow-Origin", '*');
@@ -12,21 +13,6 @@ router.use(function (req, res, next) {
     res.header("Access-Control-Allow-Headers", 'Origin,X-Requested-With,Content-Type,Accept,content-type,application/json');
     next();
 });
-
-// Middleware to check if the request body is empty
-function checkRequestBody(req, res, next) {
-    const { text } = req.body;
-    if (!text || text.trim() === '') {
-        return res.status(400).json({
-            error: {
-                message: 'Please enter the text to translate.',
-            },
-            
-        });
-    }
-    next();
-}
-
 
 router.post("/", checkRequestBody, async (req, res) => {
     const { messagesEnglish, messagesDari } = prompts(req, res);
