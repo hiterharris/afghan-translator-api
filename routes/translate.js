@@ -1,8 +1,7 @@
 const router = require("express").Router();
 const config = require("../config");
-const { configuration, openai } = config;
+const { openai, apiKey } = config;
 const logger = require("../logger");
-const db = require('../data/db-config');
 const prompts = require('../constants');
 const { checkRequestBody } = require('../middleware');
 
@@ -18,7 +17,7 @@ router.post("/", checkRequestBody, async (req, res) => {
     const { messagesEnglish, messagesDari } = prompts(req, res);
     const inputLanguage = req.body.language || 'English';
 
-    if (!configuration.apiKey) {
+    if (!apiKey) {
         res.status(500).json({
             error: { message: "OpenAI API key not configured, please follow instructions in README.md" }
         });
@@ -26,22 +25,29 @@ router.post("/", checkRequestBody, async (req, res) => {
     }
 
     try {
-        const response = await openai.createChatCompletion({
+        const response = await openai.chat.completions.create({
             model: "gpt-4",
             messages: inputLanguage === 'English' ? messagesEnglish : messagesDari,
-            temperature: 0,
-            max_tokens: 256,
         });
-        const result = response?.data?.choices[0]?.message?.content;
-        db.insert({
-            request_language: inputLanguage, 
-            request_text: req.body.text,
-            response_latin: JSON.parse(result)?.latin,
-            response_arabic: JSON.parse(result)?.arabic
-        });
+
+        const result = response?.choices[0]?.message?.content || '';
+
+        let json;
+        try {
+            json = JSON.parse(result);
+        } catch (parseError) {
+            logger.error(`JSON parse error: ${parseError.message}`);
+            res.status(500).json({
+                error: {
+                    message: 'Failed to parse the response.',
+                }
+            });
+            return;
+        }
+
         logger.info({
             request: req.body.text,
-            response: JSON.parse(result)
+            response: JSON.parse(result),
         });
         res.status(200).json(result);
     } catch (error) {

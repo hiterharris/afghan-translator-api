@@ -6,7 +6,6 @@ const server = express();
 const moesif = require('moesif-nodejs');
 
 const TranslateRouter = require("./routes/translate.js");
-const LogRouter = require("./routes/logs.js");
 
 server.use(cors());
 server.use(helmet());
@@ -26,7 +25,6 @@ server.get("/", (req, res) => {
   res.send("Dari Translator API");
 });
 
-server.use("/api/translate", TranslateRouter);
-server.use("/api/logs", LogRouter);
+server.use("/api/translate", TranslateRouter);``
 
 module.exports = server;
