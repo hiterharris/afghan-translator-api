@@ -1,9 +1,8 @@
 const router = require("express").Router();
 const config = require("../config");
 const { openai, apiKey } = config;
-const logger = require("../logger");
 const prompts = require('../constants');
-const { checkRequestBody } = require('../middleware');
+const { checkRequestBody, logger } = require('../middleware');
 
 router.use(function (req, res, next) {
     res.header("Access-Control-Allow-Origin", '*');
