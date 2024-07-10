@@ -14,20 +14,16 @@
     "axios": "^1.7.2",
     "body-parser": "^1.20.2",
     "cors": "^2.8.5",
-    "cross-fetch": "^4.0.0",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
     "helmet": "^6.2.0",
     "https": "^1.0.0",
-    "knex": "^3.1.0",
-    "mailtrap": "^3.1.1",
     "moesif-nodejs": "^3.6.2",
     "node-fetch": "^3.3.2",
-    "nodemon": "3.1.4",
-    "openai": "^4.0.0",
+    "nodemon": "^3.1.4",
+    "openai": "^4.52.3",
     "openapi": "^1.0.1",
     "pino": "^9.0.0",
-    "pino-pretty": "^11.0.0",
-    "sqlite3": "5.1.7"
+    "pino-pretty": "^11.0.0"
   }
 }
