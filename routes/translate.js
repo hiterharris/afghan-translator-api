@@ -13,8 +13,7 @@ router.use(function (req, res, next) {
 });
 
 router.post("/", checkRequestBody, async (req, res) => {
-    const { messagesEnglish, messagesDari } = prompts(req, res);
-    const inputLanguage = req.body.language || 'English';
+    const { gpt4o } = prompts(req, res);
 
     if (!apiKey) {
         res.status(500).json({
@@ -25,24 +24,13 @@ router.post("/", checkRequestBody, async (req, res) => {
 
     try {
         const response = await openai.chat.completions.create({
-            model: "gpt-4",
-            messages: inputLanguage === 'English' ? messagesEnglish : messagesDari,
-        });
+            messages: gpt4o,
+            model: "gpt-4o",
+            temperature: 0,
+            response_format: { type: "json_object" },
+          });
 
         const result = response?.choices[0]?.message?.content || '';
-
-        let json;
-        try {
-            json = JSON.parse(result);
-        } catch (parseError) {
-            logger.error(`JSON parse error: ${parseError.message}`);
-            res.status(500).json({
-                error: {
-                    message: 'Failed to parse the response.',
-                }
-            });
-            return;
-        }
 
         logger.info({
             request: req.body.text,

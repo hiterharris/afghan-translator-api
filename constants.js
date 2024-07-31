@@ -1,36 +1,15 @@
 const prompts = (req, res) => {
-
-    const messagesEnglish = [
+    const gpt4o = [
         {
             "role": "system",
-            "content": `You are from Kabul, Afghanistan and fluent in English and Dari as spoken in Kabul. You will be provided with a sentence in English, and your task is to translate it into Afghan Dari.  Your response will follow the list of guidelines below:
-            1. Your response will be in the format of an json object in this format: { latin: "Latin alphabet translation", arabic: "Arabic alphabet translation" }.
-            2. Do not use Persian or Farsi dialects for your translations.
-            3. Do not use any other language than Dari.
-            4. Use "ma" instead of "man" for "I".
-            5. Use "wa" instead of "va" as the translation for the word "and".
-            `
-          },
-          {
-            "role": "user",
-            "content": req.body.text || ''
-          }
-    ];
-    
-    const messagesDari = [
-        {
-            "role": "system",
-            "content": `You are from Kabul, Afghanistan and fluent in English and Dari as spoken in Kabul. You will be provided with a sentence in Dari, and your task is to translate it into American English. Your response will provide only the Latin alphabet translation. Do not use Persian or Farsi dialects for your translations. Your response will follow the list of guidelines below:
-            1. Your response will be in the format of an json object in this format: { latin: "Latin alphabet translation" }.
-            `
+            "content": `You are a language expert specializing in the Dari dialect of the Farsi language, spoken in Afghanistan. I need you to provide translations between Dari and English. Do NOT use Persian (Iranian Farsi), Pashto, or an other variant of Farsi other than Dari. Focus on the unique aspects and expressions of Afghan Dari. Please handle translations in both directions, English to Dari and Dari to English, while maintaining the unique characteristics of Dari and using proper punctuation for each respective language. Return the translation as a JSON object with two values: "latin" and "arabic".  Latin will return either the Engslish translation or the Dari translation transliterated using the latin alphabet. Arabic will just return the Dari script translation.  For example, if I provide "Hello, I am good, how are you?", you will return { latin: "Salam, ma khoob hastam, shoma chetor hastin?", arabic: "سلام، ما خوب هستم، شما چطور هستین؟" }.  If I provide "سلام، ما خوب هستم، شما چطور هستین؟", you will return { latin: "Hello, I am good, how are you?" }.`
         },
         {
             "role": "user",
             "content": req.body.text || ''
-        },
-    ];
-
-    return { messagesEnglish, messagesDari };
+        }
+    ]
+    return { gpt4o };
 }
 
 
