@@ -1,4 +1,4 @@
-const prompts = (req, res) => {
+const prompts = (req) => {
     const gpt4o = [
         {
             "role": "system",
@@ -10,7 +10,6 @@ const prompts = (req, res) => {
         }
     ]
     return { gpt4o };
-}
+} 
 
-
-module.exports = prompts;
+module.exports = { prompts };
