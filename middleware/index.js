@@ -1,4 +1,5 @@
 const pino = require('pino');
+const { blacklistedIPs } = require('../data/blacklistedIPs');
 
 const logger = pino({
     transport: {
@@ -30,4 +31,13 @@ const responseHeaders = (req, res, next) => {
     next();
 }
 
-module.exports = { logger, checkRequestBody, responseHeaders };
+const blacklist = (req, res) => {
+    const requestIP = req.ip || req.connection.remoteAddress;
+
+    if (blacklistedIPs.includes(requestIP)) {
+        logger.info('Access forbidden: ', requestIP);
+        return res.status(403).json({ message: 'Unknown error' });
+    }
+}
+
+module.exports = { logger, checkRequestBody, responseHeaders, blacklist };

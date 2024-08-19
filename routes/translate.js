@@ -2,11 +2,12 @@ const router = require("express").Router();
 const config = require("../config");
 const { openai, apiKey } = config;
 const { prompts } = require('../constants');
-const { responseHeaders, checkRequestBody, logger } = require('../middleware');
+const { responseHeaders, checkRequestBody, logger, blacklist } = require('../middleware');
 
 router.use(responseHeaders);
 
 router.post("/", checkRequestBody, async (req, res) => {
+    blacklist(req, res);
     const { gpt4o } = prompts(req, res);
 
     if (!apiKey) {
