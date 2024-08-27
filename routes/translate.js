@@ -3,8 +3,25 @@ const config = require("../config");
 const { openai, apiKey } = config;
 const { prompts } = require('../constants');
 const { responseHeaders, checkRequestBody, logger, blacklist } = require('../middleware');
+const fs = require('fs');
+const path = require('path');
 
 router.use(responseHeaders);
+
+const tts = async (text) => {
+    const parsedText = JSON.parse(text);
+    console.log('parsedText: ', parsedText.latin);
+
+    const speechFile = path.resolve("./speech.mp3");
+    const mp3 = await openai.audio.speech.create({
+        model: "tts-1",
+        voice: "onyx",
+        input: parsedText.latin
+      });
+      
+      const buffer = Buffer.from(await mp3.arrayBuffer());
+      await fs.promises.writeFile(speechFile, buffer);
+}
 
 router.post("/", checkRequestBody, async (req, res) => {
     blacklist(req, res);
@@ -24,8 +41,8 @@ router.post("/", checkRequestBody, async (req, res) => {
             temperature: 0,
             response_format: { type: "json_object" },
           });
-
         const result = response?.choices[0]?.message?.content || '';
+        tts(result);
 
         logger.info({
             request: req.body.text,
