@@ -21,6 +21,7 @@ const tts = async (text) => {
       
       const buffer = Buffer.from(await mp3.arrayBuffer());
       await fs.promises.writeFile(speechFile, buffer);
+      return buffer;
 }
 
 router.post("/", checkRequestBody, async (req, res) => {
@@ -42,13 +43,17 @@ router.post("/", checkRequestBody, async (req, res) => {
             response_format: { type: "json_object" },
           });
         const result = response?.choices[0]?.message?.content || '';
-        tts(result);
+        const speechBuffer = await tts(result);
+        const speechBase64 = speechBuffer.toString('base64');
 
         logger.info({
             request: req.body.text,
             response: JSON.parse(result),
         });
-        res.status(200).json(result);
+        res.status(200).json({
+            result,
+            speech: speechBase64
+        });
     } catch (error) {
         if (error.response) {
             logger.error(error.response.status, error.response.data);
