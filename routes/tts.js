@@ -35,10 +35,6 @@ if (!apiKey) {
 }
 
 router.post("/", async (req, res) => {
-  logger.info({
-    request: req.body.text,
-  });
-
   const { text } = req.body;
 
   if (!text) {
@@ -73,8 +69,6 @@ router.post("/", async (req, res) => {
 
     const speechResponse = await fetch(url, options);
 
-    logger.info({ speechResponse });
-
     if (!speechResponse.ok) {
       const errorText = await speechResponse.text();
       throw new Error(`HTTP error! status: ${speechResponse.status}, response: ${errorText}`);
@@ -90,7 +84,6 @@ router.post("/", async (req, res) => {
     });
 
     res.send(buffer);
-    logger.info('Speech generation successful!');
   } catch (error) {
     console.error('Error:', error);
     res.status(500).json({ error: 'An error occurred while processing your request.' });
