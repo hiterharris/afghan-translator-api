@@ -1,14 +1,14 @@
 const router = require("express").Router();
 const config = require("../config");
 const { openai, apiKey } = config;
-const { prompts } = require('../constants');
+const { prompts } = require('../constants/prompts');
 const { responseHeaders, checkRequestBody, logger, blacklist } = require('../middleware');
 
 router.use(responseHeaders);
 
 router.post("/", checkRequestBody, async (req, res) => {
     blacklist(req, res);
-    const { gpt4o } = prompts(req, res);
+    const { prompt } = prompts(req, res);
 
     if (!apiKey) {
         res.status(500).json({
@@ -19,7 +19,7 @@ router.post("/", checkRequestBody, async (req, res) => {
 
     try {
         const response = await openai.chat.completions.create({
-            messages: gpt4o,
+            messages: prompt,
             model: "gpt-4o",
             temperature: 0,
             response_format: { type: "json_object" },
