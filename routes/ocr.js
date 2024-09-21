@@ -1,14 +1,16 @@
 const router = require("express").Router();
 const config = require("../config");
 const { openai, apiKey } = config;
-const { translatePrompt } = require('../constants/prompts');
+const { ocrPrompt } = require('../constants/prompts');
 const { responseHeaders, checkRequestBody, logger, blacklist } = require('../middleware');
 
 router.use(responseHeaders);
 
 router.post("/", checkRequestBody, async (req, res) => {
     blacklist(req, res);
-    const { prompt } = translatePrompt(req, res);
+    console.log('req.body', req.body);
+    const { imageUrl } = req.body;
+    const { prompt } = ocrPrompt(imageUrl);
 
     if (!apiKey) {
         res.status(500).json({
@@ -17,12 +19,21 @@ router.post("/", checkRequestBody, async (req, res) => {
         return;
     }
 
+
+    if (!imageUrl) {
+        return res.status(400).json({
+            error: { message: "No image provided. Please provide a base64-encoded image in the request body." }
+        });
+    }
+
+    console.log('imageUrl', imageUrl);
+
     try {
         const response = await openai.chat.completions.create({
             messages: prompt,
             model: "gpt-4o",
-            temperature: 0,
-            response_format: { type: "json_object" },
+            response_format: { type: "text" } // { type: "json_object" }
+            // temperature: 0,
           });
 
         const result = response?.choices[0]?.message?.content || '';

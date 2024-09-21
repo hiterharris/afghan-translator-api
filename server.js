@@ -7,11 +7,14 @@ const moesif = require('moesif-nodejs');
 
 const TranslateRouter = require("./routes/translate.js");
 const TextToSpeechRouter = require("./routes/tts.js");
+const OCRRouter = require("./routes/ocr.js");
 
 server.use(cors());
 server.use(helmet());
 server.use(express.json());
-server.use(bodyParser.json());
+// server.use(bodyParser.json());
+server.use(bodyParser.json({ limit: '50mb' }));
+server.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 
 const moesifMiddleware = moesif({
   applicationId: process.env.MOESIF_APPLICATION_ID,
@@ -28,5 +31,6 @@ server.get("/", (req, res) => {
 
 server.use("/api/translate", TranslateRouter);
 server.use("/api/tts", TextToSpeechRouter);
+server.use("/api/ocr", OCRRouter);
 
 module.exports = server;

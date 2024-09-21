@@ -1,4 +1,4 @@
-const prompts = (req) => {
+const translatePrompt = (req) => {
     const { text } = req.body;
     const prompt = [
         {
@@ -36,4 +36,32 @@ const prompts = (req) => {
     return { prompt };
 }
 
-module.exports = { prompts };
+const ocrPrompt = (imageUrl) => {
+    const messages = [
+        {
+          "role": "system",
+          "content": [{
+            "type": "text",
+            "text": "You are a OCR,image to text expert."
+          }],
+        },
+        {
+          "role": "user",
+          "content": [
+            {
+              "type": "text",
+              "text": "Extract and return the text from the image."
+            },
+            {
+              "type": "image_url",
+              "image_url": {
+                "url": imageUrl
+              }
+            }
+          ]
+        }
+      ];
+      return { messages };
+}
+
+module.exports = { translatePrompt, ocrPrompt };
