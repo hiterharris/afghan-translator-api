@@ -1,9 +1,9 @@
 const express = require("express");
+const server = express();
 const helmet = require("helmet");
 const cors = require("cors");
 const bodyParser = require("body-parser");
-const server = express();
-const moesif = require('moesif-nodejs');
+const { moesifMiddleware } = require('./middleware');
 
 const TranslateRouter = require("./routes/translate.js");
 const TextToSpeechRouter = require("./routes/tts.js");
@@ -13,13 +13,7 @@ server.use(helmet());
 server.use(express.json());
 server.use(bodyParser.json());
 
-const moesifMiddleware = moesif({
-  applicationId: process.env.MOESIF_APPLICATION_ID,
-  identifyUser: function (req, res) {
-    return req.user ? req.user.id : undefined;
-  }
-});
-
+moesifMiddleware.startCaptureOutgoing();
 server.use(moesifMiddleware);
 
 server.get("/", (req, res) => {

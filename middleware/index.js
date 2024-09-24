@@ -1,5 +1,7 @@
+require('dotenv').config();
 const pino = require('pino');
 const { blacklistedIPs } = require('../data/blacklistedIPs');
+const moesif = require('moesif-nodejs');
 
 const logger = pino({
     transport: {
@@ -40,4 +42,21 @@ const blacklist = (req, res) => {
     }
 }
 
-module.exports = { logger, checkRequestBody, responseHeaders, blacklist };
+const moesifOptions = {
+    applicationId: process.env.MOESIF_APPLICATION_ID,
+    logBody: true,
+    identifyUser: function (req, res) {
+        console.log('req.user:', req); 
+        if (req.user) {
+            return req.user.id;
+        }
+        return undefined;
+    },
+    getSessionToken: function (req, res) {
+        return req.headers['Authorization'];
+    }
+};
+
+const moesifMiddleware = moesif(moesifOptions);
+
+module.exports = { logger, checkRequestBody, responseHeaders, blacklist, moesifMiddleware };
