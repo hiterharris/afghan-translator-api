@@ -22,7 +22,7 @@
     "nodemon": "^3.1.4",
     "openai": "^4.52.3",
     "openapi": "^1.0.1",
-    "pino": "^9.0.0",
+    "pino": "^9.4.0",
     "pino-pretty": "^11.0.0"
   },
   "engines": {
