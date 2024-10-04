@@ -8,7 +8,7 @@ router.use(responseHeaders);
 
 router.post("/", checkRequestBody, async (req, res) => {
     blacklist(req, res);
-    const { prompt } = prompts(req, res);
+    const { prompt, prompt2 } = prompts(req, res);
 
     if (!apiKey) {
         res.status(500).json({
@@ -19,7 +19,7 @@ router.post("/", checkRequestBody, async (req, res) => {
 
     try {
         const response = await openai.chat.completions.create({
-            messages: prompt,
+            messages: prompt2,
             model: "gpt-4o",
             temperature: 0,
             response_format: { type: "json_object" },
