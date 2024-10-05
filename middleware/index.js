@@ -46,7 +46,6 @@ const moesifOptions = {
     applicationId: process.env.MOESIF_APPLICATION_ID,
     logBody: true,
     identifyUser: function (req, res) {
-        console.log('req.user:', req); 
         if (req.user) {
             return req.user.id;
         }

@@ -7,8 +7,9 @@ const { responseHeaders, checkRequestBody, logger, blacklist } = require('../mid
 router.use(responseHeaders);
 
 router.post("/", checkRequestBody, async (req, res) => {
+    console.log('req.body', req.body);
     blacklist(req, res);
-    const { prompt, prompt2 } = prompts(req, res);
+    const { prompt } = prompts(req, res);
 
     if (!apiKey) {
         res.status(500).json({
@@ -19,7 +20,7 @@ router.post("/", checkRequestBody, async (req, res) => {
 
     try {
         const response = await openai.chat.completions.create({
-            messages: prompt2,
+            messages: prompt,
             model: "gpt-4o",
             temperature: 0,
             response_format: { type: "json_object" },
