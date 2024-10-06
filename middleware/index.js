@@ -46,14 +46,16 @@ const moesifOptions = {
     applicationId: process.env.MOESIF_APPLICATION_ID,
     logBody: true,
     identifyUser: function (req, res) {
-        console.log('req.user:', req); 
-        if (req.user) {
-            return req.user.id;
-        }
-        return undefined;
+        return req.user ? req.user.id : undefined;
     },
     getSessionToken: function (req, res) {
         return req.headers['Authorization'];
+    },
+    getMetadata: function (req, res) {
+        return {
+          name: '',
+          email: ''
+        };
     }
 };
 
