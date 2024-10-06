@@ -7,7 +7,6 @@ const { responseHeaders, checkRequestBody, logger, blacklist } = require('../mid
 router.use(responseHeaders);
 
 router.post("/", checkRequestBody, async (req, res) => {
-    console.log('req.body', req.body);
     blacklist(req, res);
     const { prompt } = prompts(req, res);
 
