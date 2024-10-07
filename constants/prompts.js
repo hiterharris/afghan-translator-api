@@ -1,8 +1,8 @@
 const prompts = (req) => {
-    const { text, translationStyle } = req.body;
-    const prompt = [
+    const { text, translationStyle, image_url } = req.body;
+    const textPrompt = [
         {
-            "id": 3,
+            "id": 1,
             "role": "system",
             "content": `
                 You are a professional translator specializing in the **Dari dialect of Farsi** used in Afghanistan. Translate the user’s text to/from **Dari**, with an emphasis on accuracy, Afghan cultural context, and maintaining the intended tone in the **${translationStyle || 'casual' }** translation style provided by the user. If a translation style is not provided, default to a balance between conversational and formal tones, **but always prioritize Afghan Dari pronunciation and cultural context**.
@@ -100,7 +100,25 @@ const prompts = (req) => {
         }
     ]
 
-    return { prompt };
+    const imagePrompt = [
+        {
+          role: "user",
+          content: [
+            {
+                type: "text",
+                text: "Extract the text from this image and return only the text from the extracted image, no other text"
+                },
+            {
+              type: "image_url",
+              image_url: {
+                "url": image_url,
+              },
+            },
+          ],
+        },
+      ];
+
+    return { textPrompt, imagePrompt };
 }
 
 module.exports = { prompts };
