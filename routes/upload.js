@@ -7,10 +7,6 @@ const { prompts } = require('../constants/prompts');
 
 router.post("/", async (req, res) => {
     const { imagePrompt } = prompts(req, res);
-    const { image_url } = req.body;
-    console.log('Received image data size:', image_url.length);
-
-    console.log('image_url: ', image_url)
 
     if (!apiKey) {
         res.status(500).json({
@@ -21,13 +17,11 @@ router.post("/", async (req, res) => {
 
     try {
         const response = await openai.chat.completions.create({
-            model: "gpt-4o-mini",
+            model: "gpt-4o",
             messages: imagePrompt
         });
 
         const result = response.choices[0].message.content;
-
-        console.log('result: ', result);
 
         logger.info({
             request: req.body,
