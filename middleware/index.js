@@ -2,6 +2,7 @@ require('dotenv').config();
 const pino = require('pino');
 const { blacklistedIPs } = require('../data/blacklistedIPs');
 const moesif = require('moesif-nodejs');
+const { rateLimit } = require('express-rate-limit');
 
 const logger = pino({
     transport: {
@@ -42,7 +43,7 @@ const blacklist = (req, res) => {
     }
 }
 
-const moesifOptions = {
+const moesifMiddleware = moesif({
     applicationId: process.env.MOESIF_APPLICATION_ID,
     logBody: true,
     identifyUser: function (req, res) {
@@ -57,8 +58,13 @@ const moesifOptions = {
           email: ''
         };
     }
-};
+});
 
-const moesifMiddleware = moesif(moesifOptions);
+const rateLimiter = rateLimit({
+	windowMs: 15 * 60 * 1000,
+	limit: 100,
+	standardHeaders: 'draft-7',
+	legacyHeaders: false
+});
 
-module.exports = { logger, checkRequestBody, responseHeaders, blacklist, moesifMiddleware };
+module.exports = { logger, checkRequestBody, responseHeaders, blacklist, moesifMiddleware, rateLimiter };

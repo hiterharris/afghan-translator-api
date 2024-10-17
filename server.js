@@ -3,8 +3,9 @@ const server = express();
 const helmet = require("helmet");
 const cors = require("cors");
 const bodyParser = require("body-parser")
-const { moesifMiddleware } = require('./middleware');
+const { moesifMiddleware, rateLimiter } = require('./middleware');
 
+server.use(rateLimiter);
 server.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 server.use(express.json({ limit: '50mb' }));
 
