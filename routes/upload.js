@@ -1,14 +1,12 @@
+require('dotenv').config();
 const router = require("express").Router();
 const config = require("../config");
 const { openai, apiKey } = config;
+const { logger } = require('../middleware');
 const { prompts } = require('../constants/prompts');
-const { responseHeaders, checkRequestBody, logger, blacklist } = require('../middleware');
 
-router.use(responseHeaders);
-
-router.post("/", checkRequestBody, async (req, res) => {
-    blacklist(req, res);
-    const { textPrompt } = prompts(req, res);
+router.post("/", async (req, res) => {
+    const { imagePrompt } = prompts(req, res);
 
     if (!apiKey) {
         res.status(500).json({
@@ -19,17 +17,15 @@ router.post("/", checkRequestBody, async (req, res) => {
 
     try {
         const response = await openai.chat.completions.create({
-            messages: textPrompt,
             model: "gpt-4o",
-            temperature: 0,
-            response_format: { type: "json_object" },
-          });
+            messages: imagePrompt
+        });
 
-        const result = response?.choices[0]?.message?.content || '';
+        const result = response.choices[0].message.content;
 
         logger.info({
-            request: req.body.text,
-            response: JSON.parse(result),
+            request: req.body,
+            response: result,
         });
         res.status(200).json(result);
     } catch (error) {
@@ -45,6 +41,9 @@ router.post("/", checkRequestBody, async (req, res) => {
             });
         }
     }
+
+
+
 });
 
 module.exports = router;
